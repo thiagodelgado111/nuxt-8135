@@ -1,6 +1,7 @@
 import { ContentfulClientApi } from 'contentful';
 import { Store } from 'vuex';
 import { Context } from '@nuxt/types';
+import { NuxtCookies } from 'cookie-universal-nuxt';
 
 export const makeListEntries =
   (contentfulClient: ContentfulClientApi, contentType: string) =>
@@ -70,18 +71,18 @@ export const actions = {
       return;
     }
 
-    const user = window.localStorage.getItem('session');
+    const user = window.$nuxt.$cookies.get('session');
     if (user) {
       commit(mutationTypes.SET_USER, JSON.parse(user));
     }
   },
   setUser ({ commit }: Store<unknown>, user: User | null) {
-    window.localStorage.setItem('session', JSON.stringify(user));
+    window.$nuxt.$cookies.set('session', user);
     commit(mutationTypes.SET_USER, user);
   },
   logout ({ commit }: Store<unknown>) {
     commit(mutationTypes.SET_USER, null);
-    window.localStorage.removeItem('session');
+    window.$nuxt.$cookies.remove('session');
     window.location.reload();
   },
   setTheme ({ commit }: Store<unknown>, theme: Theme | null) {
@@ -91,9 +92,11 @@ export const actions = {
     { commit }: Store<unknown>,
     {
       env,
-      $contentfulClient
+      $contentfulClient,
+      $cookies
     }: Context & {
       $contentfulClient: ContentfulClientApi | null;
+      $cookies: NuxtCookies | null;
     }
   ) {
     if (!$contentfulClient) {
@@ -106,5 +109,15 @@ export const actions = {
     );
     const announcements = await fetchAnnouncements(env.NUXT_ENV_COMPANY_ID);
     commit(mutationTypes.SET_ANNOUNCEMENTS, announcements);
+    commit(mutationTypes.SET_THEME, { backgroundColor: 'whitesmoke' });
+
+    if (!$cookies) {
+      return;
+    }
+
+    const user = $cookies.get('session') || null;
+    console.log('user', user);
+
+    commit(mutationTypes.SET_USER, user);
   }
 };

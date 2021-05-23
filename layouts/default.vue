@@ -1,7 +1,7 @@
 <template>
   <v-app :style="{ backgroundColor: themeBackgroundColor }">
     <v-main>
-      <v-container>
+      <v-container fluid>
         <nuxt />
       </v-container>
     </v-main>
@@ -10,28 +10,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 export default Vue.extend({
   computed: {
-    ...mapState(['user', 'theme']),
+    ...mapState(['theme']),
     themeBackgroundColor () {
       return this.theme?.backgroundColor || 'black';
     }
-  },
-  async created () {
-    await this.restoreSession();
-    const user = this.user;
-    if (!user) {
-      return this.$nuxt.$router.push('/login');
-    }
-
-    await this.setTheme({
-      backgroundColor: 'whitesmoke'
-    });
-  },
-  methods: {
-    ...mapActions(['restoreSession', 'setTheme'])
   }
 });
 </script>

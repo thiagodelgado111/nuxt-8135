@@ -1,8 +1,8 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
+    <v-col cols="6" sm="8" md="6">
       <v-card>
-        <v-card-title class="headline">
+        <v-card-title>
           Sign in
         </v-card-title>
         <v-card-actions>

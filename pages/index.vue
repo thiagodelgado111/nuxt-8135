@@ -15,7 +15,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-card>
+      <v-card class="my-4">
         <v-card-title>
           Theme
         </v-card-title>
@@ -40,6 +40,7 @@ import Vue from 'vue';
 import { mapState, mapActions } from 'vuex';
 
 export default Vue.extend({
+  middleware: 'auth',
   computed: {
     ...mapState(['user', 'announcements', 'theme'])
   },
